@@ -14,11 +14,13 @@ namespace ProfilerExterno
         static void Main(string[] args)
         {
             
-            initialize("hola");
+            //Mirar si existe el proceso
+
+            initialize(args[1]);
             do
             {
                 using (System.IO.StreamWriter file =
-                new System.IO.StreamWriter("WriteLines2.txt", true))
+                new System.IO.StreamWriter(args[1]+"-profiler.txt", true))
                 {
                     file.WriteLine(getCurrentCpuUsage() + ";" + getAvailableRAM());
                     file.Close();
@@ -30,7 +32,6 @@ namespace ProfilerExterno
 
         public static void initialize(string Proceso)
         {
-
             cpuCounter = new PerformanceCounter("Processor", "% Processor Time", Proceso);
             ramCounter = new PerformanceCounter("Memory", "Available MBytes");
         }
