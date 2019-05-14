@@ -18,7 +18,7 @@ public class Program : MonoBehaviour
             using (System.IO.StreamWriter file =
            new System.IO.StreamWriter("Profiler.txt", false))
             {
-                file.WriteLine(Application.productName);
+                file.WriteLine(Process.GetCurrentProcess().ProcessName);
             }
         }
 

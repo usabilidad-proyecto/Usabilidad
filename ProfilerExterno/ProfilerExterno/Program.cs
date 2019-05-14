@@ -11,39 +11,74 @@ namespace ProfilerExterno
     {
         private static PerformanceCounter cpuCounter;
         private static PerformanceCounter ramCounter;
+        private static string proceso;
         static void Main(string[] args)
         {
-            
-            //Mirar si existe el proceso
+            //Floats con puntos en vez de comas
+            System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+            customCulture.NumberFormat.NumberDecimalSeparator = ".";
 
-            initialize(args[1]);
+            System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
+
+            proceso = args[0];
+            //Mirar si existe el proceso
+            initialize(proceso);
+
             do
             {
                 using (System.IO.StreamWriter file =
-                new System.IO.StreamWriter(args[1]+"-profiler.txt", true))
+                new System.IO.StreamWriter(proceso+"-profiler.txt", true))
                 {
-                    file.WriteLine(getCurrentCpuUsage() + ";" + getAvailableRAM());
+                    file.WriteLine(getCurrentCpuUsage()+  ";" + getAvailableRAM());
                     file.Close();
                 }
                 System.Threading.Thread.Sleep(500);
-            } while (true);
+                
+            } while (getProcess());
         }
-     
+        private static bool getProcess() {
+            Process[] a = Process.GetProcessesByName(proceso);
+            return a.GetLength(0) != 0;
+        }
 
         public static void initialize(string Proceso)
         {
-            cpuCounter = new PerformanceCounter("Processor", "% Processor Time", Proceso);
-            ramCounter = new PerformanceCounter("Memory", "Available MBytes");
+            try            
+            {
+                
+                cpuCounter = new PerformanceCounter("Process", "% Processor Time", Proceso);
+                ramCounter = new PerformanceCounter("Memory", "Available MBytes");
+            }
+            catch {
+                using (System.IO.StreamWriter file =
+               new System.IO.StreamWriter(proceso + "DEBUG.txt", true))
+                {
+                    Console.WriteLine("PerformanceCounter not initialized.");
+                    file.Close();
+                }
+            }
         }
 
         public static string getCurrentCpuUsage()
         {
-            return cpuCounter.NextValue().ToString();
+            try
+            {
+                return cpuCounter.NextValue().ToString();
+            }
+            catch {
+                return "";
+            }
         }
 
         public static string getAvailableRAM()
         {
-            return ramCounter.NextValue().ToString();
+            try
+            {
+                return ramCounter.NextValue().ToString();
+            }
+            catch {
+                return "";
+            }
         }
     }
 }
