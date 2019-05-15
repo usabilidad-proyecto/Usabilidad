@@ -283,6 +283,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9828177a83c89084da662c882956e340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ProfilerUnityPath: 
+  profilerActive: 1
 --- !u!4 &1785033604
 Transform:
   m_ObjectHideFlags: 0
