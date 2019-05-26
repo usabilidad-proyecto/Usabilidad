@@ -52,7 +52,7 @@ public class UnityProfiler : MonoBehaviour
 #else
         if (profilerActive)
         {
-            TrackerGr03.Tracker.startTracker("editor",(Application.dataPath + "/ProfilerLogs/") , TrackerGr03.Tracker.TypeFile.CSVSerializer);
+            TrackerGr03.Tracker.startTracker("editor", (Application.dataPath + "/ProfilerLogs/"), TrackerGr03.Tracker.TypeFile.CSVSerializer);
 
             StartCoroutine(SendTrace());
 
@@ -70,7 +70,7 @@ public class UnityProfiler : MonoBehaviour
             nextUpdate += 1.0f / updateRate;
             fps = frameCount * updateRate;
             frameCount = 0;
-
+            UnityEngine.Debug.Log(UnityStats.);
         }
     }
 
@@ -82,11 +82,11 @@ public class UnityProfiler : MonoBehaviour
         {
             // execute block of code here
 #if UNITY_EDITOR
-            TrackerGr03.Tracker.sendTrace(new TrackerGr03.Tracker.Trace(UnityStats.screenRes, UnityStats.drawCalls, UnityStats.triangles, UnityStats.vertices, CountObjects(), 0.01f / UnityStats.renderTime));
+            TrackerGr03.Tracker.sendTrace(new TrackerGr03.Tracker.Trace(UnityStats.screenRes, UnityStats.drawCalls, UnityStats.triangles, UnityStats.vertices, CountObjects(), UnityStats.frameTime));
 #else
             TrackerGr03.Tracker.sendTrace(new TrackerGr03.Tracker.Trace(CountObjects(), fps));
 #endif
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1.0f);
         }
 
 
@@ -104,9 +104,9 @@ public class UnityProfiler : MonoBehaviour
                 nObjects++;
             }
         }
-            return nObjects;
-        
-     
+        return nObjects;
+
+
     }
 
 }
